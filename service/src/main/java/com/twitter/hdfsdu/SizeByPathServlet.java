@@ -91,7 +91,7 @@ public class SizeByPathServlet extends TextResponseHandler {
 				entry.put("count", resultSet.getString("file_count"));
 				entry.put("name_quota", resultSet.getString("name_quota"));
 				entry.put("owner", resultSet.getString("owner"));
-				entry.put("group", resultSet.getString("group"));
+				entry.put("group", resultSet.getString("grp"));
 				entry.put("permissions", resultSet.getString("permissions"));
 				entry.put("leaf", resultSet.getString("leaf"));
 				results.add(entry);

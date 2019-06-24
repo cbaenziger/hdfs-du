@@ -84,7 +84,7 @@ public class HdfsDu extends AbstractApplication {
       Statement s = conn.createStatement();
       s.executeUpdate("drop table if exists size_by_path");
       s.executeUpdate("create table size_by_path (path varchar(4096), "
-          + "size_in_bytes varchar(4096), space_quota bigint, file_count bigint, name_quota bigint, path_depth integer, leaf integer, varchar(4096) owner, varchar(4096) group, varchar(10) permissions");
+          + "size_in_bytes varchar(4096), space_quota bigint, file_count bigint, name_quota bigint, path_depth integer, leaf integer, owner varchar(4096), grp varchar(4096), permissions varchar(10))");
     } catch (SQLException e) {
       throw new RuntimeException("omg", e);
     }
@@ -117,7 +117,7 @@ public class HdfsDu extends AbstractApplication {
       String line;
       PreparedStatement s = conn
           .prepareStatement("insert into size_by_path "
-              + "(path, size_in_bytes, space_quota, file_count, name_quota, path_depth, leaf, owner, group, permissions) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+              + "(path, size_in_bytes, space_quota, file_count, name_quota, path_depth, leaf, owner, grp, permissions) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
       while (true) {
         line = bufferedReader.readLine();
@@ -178,7 +178,7 @@ public class HdfsDu extends AbstractApplication {
             resultSet.getInt("path_depth"),
             resultSet.getInt("leaf"),
             resultSet.getString("owner"),
-            resultSet.getString("group"),
+            resultSet.getString("grp"),
             resultSet.getString("permissions")));
       }
 
