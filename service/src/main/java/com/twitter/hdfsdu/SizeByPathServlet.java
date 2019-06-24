@@ -79,16 +79,21 @@ public class SizeByPathServlet extends TextResponseHandler {
 		List<String> lines = Lists.newLinkedList();
 		ObjectMapper mapper = new ObjectMapper();
 
-    try {
+		try {
 			List<Map<String, String>> results = Lists.newArrayList();
 			ResultSet resultSet = getSizeByPath(request);
 
 			while (resultSet.next()) {
 				Map<String, String> entry = Maps.newHashMap();
 				entry.put("path", resultSet.getString("path"));
-        entry.put("bytes", resultSet.getString("size_in_bytes"));
-        entry.put("count", resultSet.getString("file_count"));
-        entry.put("leaf", resultSet.getString("leaf"));
+				entry.put("bytes", resultSet.getString("size_in_bytes"));
+				entry.put("space_quota", resultSet.getString("space_quota"));
+				entry.put("count", resultSet.getString("file_count"));
+				entry.put("name_quota", resultSet.getString("name_quota"));
+				entry.put("owner", resultSet.getString("owner"));
+				entry.put("group", resultSet.getString("group"));
+				entry.put("permissions", resultSet.getString("permissions"));
+				entry.put("leaf", resultSet.getString("leaf"));
 				results.add(entry);
 			}
 

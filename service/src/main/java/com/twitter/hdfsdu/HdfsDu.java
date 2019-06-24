@@ -84,7 +84,7 @@ public class HdfsDu extends AbstractApplication {
       Statement s = conn.createStatement();
       s.executeUpdate("drop table if exists size_by_path");
       s.executeUpdate("create table size_by_path (path varchar(4096), "
-          + "size_in_bytes varchar(4096), file_count bigint, path_depth integer, leaf integer)");
+          + "size_in_bytes varchar(4096), space_quota bigint, file_count bigint, name_quota bigint, path_depth integer, leaf integer, varchar(4096) owner, varchar(4096) group, varchar(10) permissions");
     } catch (SQLException e) {
       throw new RuntimeException("omg", e);
     }
@@ -117,7 +117,8 @@ public class HdfsDu extends AbstractApplication {
       String line;
       PreparedStatement s = conn
           .prepareStatement("insert into size_by_path "
-              + "(path, size_in_bytes, file_count, path_depth, leaf) values (?, ?, ?, ?, ?)");
+              + "(path, size_in_bytes, space_quota, file_count, name_quota, path_depth, leaf, owner, group, permissions) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
       while (true) {
         line = bufferedReader.readLine();
         if (line == null) {
@@ -125,14 +126,29 @@ public class HdfsDu extends AbstractApplication {
         }
         String[] parts = line.split("\t");
         s.clearParameters();
+	// path
         s.setString(1, parts[0]);
+	// size_in_bytes
         s.setString(2, parts[1]);
-        s.setLong(3, Long.parseLong(parts[2]));
+	// space_quota
+        s.setString(3, parts[2]);
+	// file_count
+        s.setLong(4, Long.parseLong(parts[3]));
+	// name_quota
+        s.setLong(5, Long.parseLong(parts[4]));
+	// path_depth
         s.setInt(
-            4,
+            6,
             parts[0].split("/").length == 0 ? 0 : parts[0]
                 .split("/").length - 1);
-        s.setInt(5, Integer.parseInt(parts[3]));
+	// leaf
+        s.setInt(7, Integer.parseInt(parts[8]));
+	// owner
+        s.setString(8, parts[5]);
+	// group
+        s.setString(9, parts[6]);
+	// permissions
+        s.setString(10, parts[7]);
         s.executeUpdate();
 
       }
@@ -153,11 +169,17 @@ public class HdfsDu extends AbstractApplication {
       LOG.info("Sample lines read from DB:");
       while (resultSet.next()) {
         LOG.info(String.format(
-            "path: %s  bytes: %s  file_count: %d  path_depth: %d",
+            "path: %s  bytes: %s  space quota: %d  file_count: %d  name quota: %d  path_depth: %d  leaf: %d  owner: %s  group: %s  permissions: %s",
             resultSet.getString("path"),
             resultSet.getString("size_in_bytes"),
+            resultSet.getLong("space_quota"),
             resultSet.getLong("file_count"),
-            resultSet.getInt("path_depth")));
+            resultSet.getLong("name_quota"),
+            resultSet.getInt("path_depth"),
+            resultSet.getInt("leaf"),
+            resultSet.getString("owner"),
+            resultSet.getString("group"),
+            resultSet.getString("permissions")));
       }
 
     } catch (Exception e) {

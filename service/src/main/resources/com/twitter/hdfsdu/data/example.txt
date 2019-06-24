@@ -1,7 +1,7 @@
-/	19000	6	0
-/tmp	5000	1	1
-/user	6000	3	0
-/user/travis	3000	2	0
-/user/travis/foo	1000	1	1
-/user/travis/bar	2000	1	1
-/var	8000	1	1
+/	19000	-1	6	-1	0	0	hdfs	hdfs	drwxr-xr-x
+/tmp	5000	-1	1	-1	1	0	hdfs	hdfs	drwxrwxrwt
+/user	6000	-1	3	-1	1	0	hdfs	hdfs	drwxr-xr-x
+/user/travis	3000	100000000	2	1000	2	0	travis	hdfs	drwx------
+/user/travis/foo	1000	1	0	3	1	travis	hdfs	-rwx------
+/user/travis/bar	2000	1	0	3	1	travis	hdfs	-rwx------
+/var	8000	-1	1	-1	1	0	hdfs	hdfs	drwxrwxrwt

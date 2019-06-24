@@ -44,10 +44,21 @@ grouped_B = GROUP B BY path;
 count_by_path = FOREACH grouped_B GENERATE group as path, SUM(B.count) as count;
 
 joined = join size_by_path by path, count_by_path by path;
-final_output = foreach joined generate
+computed_output = foreach joined generate
   size_by_path::path as path,
   size_by_path::bytes as bytes,
   count_by_path::count as count;
-final_output = ORDER final_output BY path;
+computed_output = ORDER final_output BY path;
+
+last_join = join computed_output by path, data by path;
+final_output = foreach last_join generate
+  computed_output::path as path,
+  computed_output::bytes as bytes,
+  data::NamespaceQuota,
+  computed_output::count as count,
+  data::DiskspaceQuota,
+  data::username,
+  data::groupname,
+  data::perms;
 
 store final_output into '$OUTPUT' using PigStorage('\t') parallel 1;
