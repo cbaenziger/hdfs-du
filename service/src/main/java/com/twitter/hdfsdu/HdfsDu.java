@@ -135,14 +135,14 @@ public class HdfsDu extends AbstractApplication {
 	// file_count
         s.setLong(4, Long.parseLong(parts[3]));
 	// name_quota
-        s.setLong(5, Long.parseLong(parts[4]));
+        s.setString(5, parts[4]);
 	// path_depth
         s.setInt(
             6,
             parts[0].split("/").length == 0 ? 0 : parts[0]
                 .split("/").length - 1);
 	// leaf
-        s.setInt(7, Integer.parseInt(parts[8]));
+        s.setInt(8, Integer.parseInt(parts[8]));
 	// owner
         s.setString(8, parts[5]);
 	// group

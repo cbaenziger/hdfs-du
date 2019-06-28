@@ -27,8 +27,8 @@ data = LOAD '$INPUT' USING PigStorage('\t') AS (path:chararray,
                                                 blockSize:long,
                                                 numBlocks:int,
                                                 fileSize:long,
-                                                NamespaceQuota:int,
-                                                DiskspaceQuota:int,
+                                                NamespaceQuota:long,
+                                                DiskspaceQuota:long,
                                                 perms:chararray,
                                                 username:chararray,
                                                 groupname:chararray);
@@ -48,7 +48,6 @@ computed_output = foreach joined generate
   size_by_path::path as path,
   size_by_path::bytes as bytes,
   count_by_path::count as count;
-computed_output = ORDER final_output BY path;
 
 last_join = join computed_output by path, data by path;
 final_output = foreach last_join generate
@@ -60,5 +59,6 @@ final_output = foreach last_join generate
   data::username,
   data::groupname,
   data::perms;
+final_output = ORDER final_output BY path;
 
 store final_output into '$OUTPUT' using PigStorage('\t') parallel 1;
